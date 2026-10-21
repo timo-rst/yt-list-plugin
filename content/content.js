@@ -165,8 +165,8 @@
     if (!text) return '';
     let s = decodeHtmlEntities(text).replace(/\r/g, '').trim();
     s = s.replace(/\n+/g, ' ').replace(/\s{2,}/g, ' ');
-    if (s.length > 240) {
-      s = s.slice(0, 240).trimEnd() + '…';
+    if (s.length > 360) {
+      s = s.slice(0, 360).trimEnd() + '…';
     }
     return s;
   }
