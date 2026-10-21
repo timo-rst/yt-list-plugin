@@ -18,9 +18,11 @@ body[data-yt-list-view="true"] ytd-rich-grid-renderer {
   --ytd-rich-grid-row-margin: 0px !important;
 }
 
-/* Ensure contents container is centered and constrained */
-html[data-yt-list-view="true"] ytd-rich-grid-renderer #contents,
-body[data-yt-list-view="true"] ytd-rich-grid-renderer #contents {
+/* Ensure main contents container is centered and constrained (do NOT affect shelves) */
+html[data-yt-list-view="true"] ytd-rich-grid-renderer > #contents,
+html[data-yt-list-view="true"] #contents.ytd-rich-grid-renderer,
+body[data-yt-list-view="true"] ytd-rich-grid-renderer > #contents,
+body[data-yt-list-view="true"] #contents.ytd-rich-grid-renderer {
   display: flex !important;
   flex-direction: column !important;
   width: 100% !important;
@@ -30,7 +32,7 @@ body[data-yt-list-view="true"] ytd-rich-grid-renderer #contents {
   box-sizing: border-box !important;
 }
 
-/* Flatten YouTube's batch rows so each video flows naturally */
+/* Flatten YouTube's batch rows so regular videos flow naturally */
 html[data-yt-list-view="true"] ytd-rich-grid-row,
 body[data-yt-list-view="true"] ytd-rich-grid-row,
 html[data-yt-list-view="true"] #contents.ytd-rich-grid-row,
@@ -38,9 +40,9 @@ body[data-yt-list-view="true"] #contents.ytd-rich-grid-row {
   display: contents !important;
 }
 
-/* Each item is a single full-width row */
-html[data-yt-list-view="true"] ytd-rich-item-renderer:not(.yslv-is-short),
-body[data-yt-list-view="true"] ytd-rich-item-renderer:not(.yslv-is-short) {
+/* Regular video items (explicitly exclude items inside Shorts shelves/sections) */
+html[data-yt-list-view="true"] ytd-rich-item-renderer:not(ytd-rich-shelf-renderer ytd-rich-item-renderer):not(ytd-rich-section-renderer ytd-rich-item-renderer),
+body[data-yt-list-view="true"] ytd-rich-item-renderer:not(ytd-rich-shelf-renderer ytd-rich-item-renderer):not(ytd-rich-section-renderer ytd-rich-item-renderer) {
   display: block !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -51,15 +53,68 @@ body[data-yt-list-view="true"] ytd-rich-item-renderer:not(.yslv-is-short) {
   transition: background-color 0.15s ease !important;
 }
 
-html[data-yt-list-view="true"] ytd-rich-item-renderer:not(.yslv-is-short):hover,
-body[data-yt-list-view="true"] ytd-rich-item-renderer:not(.yslv-is-short):hover {
+html[data-yt-list-view="true"] ytd-rich-item-renderer:not(ytd-rich-shelf-renderer ytd-rich-item-renderer):not(ytd-rich-section-renderer ytd-rich-item-renderer):hover,
+body[data-yt-list-view="true"] ytd-rich-item-renderer:not(ytd-rich-shelf-renderer ytd-rich-item-renderer):not(ytd-rich-section-renderer ytd-rich-item-renderer):hover {
   background-color: var(--yt-spec-badge-chip-background, rgba(128, 128, 128, 0.08)) !important;
 }
 
-html[data-yt-list-view="true"] ytd-rich-item-renderer #content,
-body[data-yt-list-view="true"] ytd-rich-item-renderer #content {
+html[data-yt-list-view="true"] ytd-rich-item-renderer:not(ytd-rich-shelf-renderer ytd-rich-item-renderer):not(ytd-rich-section-renderer ytd-rich-item-renderer) #content,
+body[data-yt-list-view="true"] ytd-rich-item-renderer:not(ytd-rich-shelf-renderer ytd-rich-item-renderer):not(ytd-rich-section-renderer ytd-rich-item-renderer) #content {
   width: 100% !important;
   max-width: 100% !important;
+  display: block !important;
+}
+
+/* --------------------------------------------------------------------------
+   Shorts Shelf Layout (Horizontal Row: S S S S S)
+   -------------------------------------------------------------------------- */
+html[data-yt-list-view="true"] ytd-rich-section-renderer,
+body[data-yt-list-view="true"] ytd-rich-section-renderer {
+  width: 100% !important;
+  max-width: var(--yt-list-max-width, 1280px) !important;
+  margin: 20px auto !important;
+  display: block !important;
+}
+
+/* Shelf content container: horizontal row with smooth scroll */
+html[data-yt-list-view="true"] ytd-rich-shelf-renderer #contents,
+html[data-yt-list-view="true"] #contents.ytd-rich-shelf-renderer,
+body[data-yt-list-view="true"] ytd-rich-shelf-renderer #contents,
+body[data-yt-list-view="true"] #contents.ytd-rich-shelf-renderer {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 16px !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth !important;
+  width: 100% !important;
+  padding: 8px 4px 16px 4px !important;
+  box-sizing: border-box !important;
+}
+
+/* Individual Short cards inside the shelf remain compact */
+html[data-yt-list-view="true"] ytd-rich-shelf-renderer ytd-rich-item-renderer,
+body[data-yt-list-view="true"] ytd-rich-shelf-renderer ytd-rich-item-renderer {
+  display: block !important;
+  width: 200px !important;
+  min-width: 180px !important;
+  max-width: 220px !important;
+  flex: 0 0 200px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+}
+
+html[data-yt-list-view="true"] ytd-rich-shelf-renderer ytd-rich-item-renderer #content,
+body[data-yt-list-view="true"] ytd-rich-shelf-renderer ytd-rich-item-renderer #content {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+html[data-yt-list-view="true"] ytd-rich-shelf-renderer :is(ytm-shorts-lockup-view-model-v2, ytd-reel-item-renderer),
+body[data-yt-list-view="true"] ytd-rich-shelf-renderer :is(ytm-shorts-lockup-view-model-v2, ytd-reel-item-renderer) {
+  width: 100% !important;
   display: block !important;
 }
 

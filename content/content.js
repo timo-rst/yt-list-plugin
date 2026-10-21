@@ -302,6 +302,9 @@
     );
 
     cards.forEach((card) => {
+      // Explicitly ignore Shorts shelves/items
+      if (card.closest('ytd-rich-shelf-renderer, ytd-reel-shelf-renderer, ytd-rich-section-renderer')) return;
+
       // Mark as processed so we never touch this card again
       if (card.dataset.ytDescAttached === 'true') return;
 
