@@ -1,93 +1,132 @@
-# YouTube Abo-Box Listenansicht (Chromium Extension)
+# Subscriptions List View for YouTube™
 
-Eine schlanke, performante Browser-Erweiterung für den **Brave Browser**, **Google Chrome**, **Microsoft Edge** und andere Chromium-basierte Browser, welche die klassische, übersichtliche **Listenansicht der YouTube Abo-Box** zurückbringt.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Manifest V3](https://img.shields.io/badge/Manifest-V3-success.svg)](manifest.json)
+[![Browser Support](https://img.shields.io/badge/Browser-Brave%20%7C%20Chrome%20%7C%20Edge-orange.svg)](#-installation)
+[![GitHub release](https://img.shields.io/github/v/release/timo-rst/yt-list-plugin?color=brightgreen)](https://github.com/timo-rst/yt-list-plugin/releases)
+
+A lightweight and responsive Chromium browser extension (Manifest V3) for **Brave**, **Google Chrome**, **Microsoft Edge**, and other Chromium-based browsers that brings back the clean, classic **horizontal list view for your YouTube™ subscription feed**.
 
 ---
 
-## 📸 Layout-Vergleich
+## 📸 Preview
 
-### Standard YouTube (4-Kachel Grid)
-```text
-[ Kachel 1 ]  [ Kachel 2 ]  [ Kachel 3 ]  [ Kachel 4 ]
-[ Kachel 5 ]  [ Kachel 6 ]  [ Kachel 7 ]  [ Kachel 8 ]
-```
-*Sehr unübersichtlich, Titel oft abgeschnitten, Videos werden leicht übersehen.*
+![Subscriptions List View Preview](docs/preview.svg)
 
-### Mit dieser Erweiterung (Klassische Listenansicht)
-```text
-+-----------------------------------------------------------------------------------------+
-|  [ THUMBNAIL ]   Video-Titel (vollständig & gut lesbar)                                 |
-|  [   16 : 9  ]   Kanalname • 15 Tsd. Aufrufe • vor 2 Stunden                            |
-|  [  (240px)  ]   Video-Beschreibung / Infobox-Snippet (erste Zeilen der Beschreibung)   |
-|                  [Später ansehen] [Zur Playlist hinzufügen]                    [···]    |
-+-----------------------------------------------------------------------------------------+
-|  [ THUMBNAIL ]   Nächstes Video ...                                                     |
-+-----------------------------------------------------------------------------------------+
-```
+---
+
+## 📊 Comparison: Grid vs. Classic List
+
+| Standard YouTube (4-Column Grid) | With this Extension (Classic List View) |
+| :--- | :--- |
+| ❌ Cluttered 4-tile grid layout | ✅ Clean horizontal rows from top to bottom |
+| ❌ Long titles are frequently truncated | ✅ Full video titles are always clearly visible |
+| ❌ No video descriptions in subscription feed | ✅ First lines of video description (infobox) shown under views |
+| ❌ Easy to miss videos while scanning down | ✅ Structured, linear view — impossible to overlook new uploads |
+| ℹ️ Shorts shelves shown as horizontal rows | ✅ Shorts work normally, with an added option to hide them completely |
 
 ---
 
 ## ✨ Features
 
-- 📜 **Klassische Listenansicht:** Videos werden sauber untereinander mit flexibler Thumbnail-Größe links und vollständigen Metadaten rechts dargestellt.
-- 📝 **Videobeschreibungs-Vorschau:** Zeigt automatisch die ersten Zeilen der Videobeschreibung (Infobox) direkt in der Abo-Box unter dem Kanalnamen und den Aufrufen an.
-- 🎛️ **Nahtloser Umschalt-Button:** Direkt neben dem YouTube-Button **„Alle Abos“** befindet sich ein dezenter Umschalter (`[ ☷ Kacheln ]` wenn Liste aktiv ist, bzw. `[ ☰ Liste ]` wenn Kacheln aktiv sind), mit dem sich jederzeit zwischen Kachel- und Listenansicht wechseln lässt.
-- ⚡ **Automatische Beschreibungsabschaltung:** Sobald auf Kacheln umgeschaltet wird, werden die Beschreibungen automatisch ausgeblendet und das native YouTube-Grid 1:1 wiederhergestellt.
-- 📱 **Intelligentes Shorts-Handling:** 
-  - YouTube Shorts-Regale bleiben als kompakte horizontale Reihe (`S S S S S`) erhalten und scrollen seitlich – kein vertikaler Riesenblock.
-  - Optional können Shorts in den Einstellungen auch komplett ausgeblendet werden.
-- ⚙️ **Konfigurations-Popup:**
-  - **Live Thumbnail-Slider:** Thumbnail-Breite stufenlos von 160px bis 420px anpassen mit sofortiger Live-Vorschau.
-  - **Beschreibungen ein-/ausschalten:** Vorschautexte nach Belieben aktivieren oder deaktivieren.
-  - **Shorts ausblenden:** Schalter zum kompletten Verstecken von Shorts-Sektionen.
-  - **On-Page Umschalter:** Umschalt-Button in der Abo-Box bei Bedarf ein- oder ausblenden.
-- 🌓 **Natives YouTube-Design:** Nutzt YouTubes eigene Design-Tokens (Dark & Light Mode kompatibel).
-- 🚀 **100% Sicher & Performant:** Kein Monkey-Patching, keine unendlichen DOM-Mutation-Loops, sichere CSP-Konformität (Manifest V3).
+- 📜 **Classic Horizontal List View:** Videos are presented in clean, linear rows: thumbnail on the left, channel avatar, title, channel name, views, date, and description snippet on the right.
+- 📝 **Live Description Preview:** Automatically fetches and displays the first lines of the video description directly under the metadata.
+- 🎛️ **Seamless On-Page Toggle Button:** Placed right next to YouTube's **"Manage"** button in the subscription header (`[ ☷ Grid ]` when list view is active, or `[ ☰ List ]` when grid view is active) to switch views with a single click.
+- ⚡ **Automatic Description Toggling:** Switching to grid view automatically hides descriptions and cleanly restores YouTube's default 4-column layout without page reloads.
+- 📱 **Flexible Shorts Control:**
+  - YouTube Shorts shelves work normally as horizontal scrollable rows (`S S S S S`).
+  - You can optionally toggle **Hide Shorts** in settings to completely remove Shorts shelves from your subscription feed.
+- 🎚️ **Live Thumbnail Sizing:** Adjust thumbnail width smoothly from **160px to 420px** with instant live preview in your active tab.
+- 🌓 **Native YouTube Theme Integration:** Seamlessly adapts to YouTube's dark and light mode color tokens.
+- 🛡️ **Lightweight & Privacy-First:**
+  - Zero analytics, zero tracking, zero third-party network requests.
+  - No aggressive DOM mutation loops.
+  - Safe rendering via `textContent` (fully XSS protected).
+  - Built-in rate-limit backoff and network timeouts.
 
 ---
 
 ## 🚀 Installation
 
-### 1. Repository klonen oder herunterladen
-```bash
-git clone https://github.com/timo-rst/yt-list-plugin.git
-```
-*(Oder als ZIP herunterladen und entpacken).*
+### Option A: Install from Release ZIP (Recommended for Users)
 
-### 2. In Brave / Chrome aktivieren
-1. Öffne die Erweiterungsverwaltung deines Browsers:
+1. Download the latest `yt-list-plugin.zip` from [Releases](https://github.com/timo-rst/yt-list-plugin/releases).
+2. Unpack the ZIP file to a folder on your computer.
+3. Open your browser's extension management page:
    - **Brave:** `brave://extensions`
    - **Chrome:** `chrome://extensions`
    - **Edge:** `edge://extensions`
-2. Aktiviere oben rechts den Schalter **Entwicklermodus** (*Developer mode*).
-3. Klicke oben links auf **Entpackte Erweiterung laden** (*Load unpacked*).
-4. Wähle den Ordner `yt_list_plugin` aus.
-5. Öffne [https://www.youtube.com/feed/subscriptions](https://www.youtube.com/feed/subscriptions).
-6. Deine Abo-Box wird sofort in der aufgeräumten Listenansicht angezeigt!
+4. Enable **Developer mode** in the top right corner.
+5. Click **Load unpacked** in the top left corner and select the unpacked folder.
+6. Open [https://www.youtube.com/feed/subscriptions](https://www.youtube.com/feed/subscriptions) — your subscription feed is now organized as a list!
 
 ---
 
-## 📁 Projektstruktur
+### Option B: Clone via Git (For Developers)
 
-```text
-yt_list_plugin/
-├── manifest.json              # Manifest V3 Konfiguration
-├── content/
-│   ├── content.js             # State-Management, SPA-Routing, Beschreibungs-Lader & Button-Injection
-│   └── styles.css             # CSS Grid- & Flexbox-Layouts, Dark-Mode-Styles & Button-Design
-├── popup/
-│   ├── popup.html             # Einstellungs-Menü
-│   ├── popup.css              # Styling des Einstellungsfensters
-│   └── popup.js               # Live-Synchronisation der Optionen via chrome.storage
-├── icons/
-│   ├── icon16.png
-│   ├── icon48.png
-│   └── icon128.png
-├── .gitignore                 # Ausgeschlossene Dateien (OS, IDEs)
-└── README.md                  # Dokumentation und Anleitung
+```bash
+# Clone the repository
+git clone https://github.com/timo-rst/yt-list-plugin.git
+cd yt-list-plugin
+
+# Load unpacked in brave://extensions or chrome://extensions
 ```
 
 ---
 
-## 📄 Lizenz
-MIT License - Frei zur privaten und kommerziellen Nutzung.
+## ⚙️ Configuration (Popup)
+
+Click the extension icon in your browser toolbar to access options:
+
+- **Main Toggle:** Enable or disable list view globally.
+- **Thumbnail Width (160px – 420px):** Live slider to customize the thumbnail size.
+- **Description Preview:** Toggle infobox snippets on or off.
+- **Hide Shorts:** Option to completely hide Shorts shelves from the subscription feed.
+- **On-Page Toggle Button:** Enable or disable the view switcher button next to "Manage".
+
+---
+
+## 📁 Project Structure
+
+```text
+yt-list-plugin/
+├── manifest.json              # Manifest V3 configuration & permissions
+├── content/
+│   ├── content.js             # SPA routing, description loader & toggle logic
+│   └── styles.css             # Grid & flexbox layouts, theme styling & button styles
+├── popup/
+│   ├── popup.html             # Settings popup UI
+│   ├── popup.css              # Dark theme styling for settings
+│   └── popup.js               # Live settings sync via chrome.storage.sync
+├── icons/                     # Extension icons (16px, 48px, 128px)
+├── docs/
+│   └── preview.svg            # Vector UI preview mockup with dummy data
+├── scripts/
+│   └── package.sh             # Release packaging script
+├── .github/                   # Issue templates
+├── LICENSE                    # MIT License
+└── README.md                  # Documentation
+```
+
+---
+
+## 🔒 Privacy Policy
+
+- **No Personal Data Collected:** This extension does not collect, track, or transmit any user data, browsing history, or account credentials.
+- **No Third-Party Requests:** All network requests stay strictly within your active YouTube session to fetch public video metadata. No data is sent to external servers.
+- **Minimal Permissions:** Uses only `storage` (to save your slider and toggle preferences locally) and host permissions for `youtube.com`.
+
+---
+
+## 🤝 Contributing
+
+Contributions, feedback, and feature suggestions are welcome!
+Please check out [CONTRIBUTING.md](CONTRIBUTING.md) and open an [issue](https://github.com/timo-rst/yt-list-plugin/issues) if you encounter any bugs or have ideas for improvement.
+
+---
+
+## 📄 License & Disclaimer
+
+Released under the [MIT License](LICENSE).
+
+> **Disclaimer:** YouTube™ is a trademark of Google LLC. This extension is an independent open-source project and is not affiliated with, endorsed by, or associated with Google LLC or YouTube.

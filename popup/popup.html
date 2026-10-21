@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YouTube Abo-Box Listenansicht</title>
+  <title>Subscriptions List View for YouTube™</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
@@ -17,11 +17,11 @@
           </svg>
         </div>
         <div>
-          <h1>YT Abo-Liste</h1>
-          <span class="subtitle">Klassische Listenansicht</span>
+          <h1>Sub List View</h1>
+          <span class="subtitle">Classic subscription feed</span>
         </div>
       </div>
-      <label class="switch" title="Listenansicht aktivieren oder deaktivieren">
+      <label class="switch" title="Enable or disable list view">
         <input type="checkbox" id="toggle-enabled">
         <span class="slider"></span>
       </label>
@@ -34,7 +34,7 @@
       <!-- Thumbnail Width Slider -->
       <div class="setting-item column">
         <div class="label-row">
-          <span class="label-title">Thumbnail-Breite</span>
+          <span class="label-title">Thumbnail Width</span>
           <span id="thumb-width-val" class="badge">240px</span>
         </div>
         <div class="range-wrapper">
@@ -47,8 +47,8 @@
       <!-- Video Description Snippet -->
       <div class="setting-item">
         <div class="label-info">
-          <span class="label-title">Infobox-Vorschau</span>
-          <span class="label-desc">Videobeschreibung unter den Video-Infos anzeigen</span>
+          <span class="label-title">Description Preview</span>
+          <span class="label-desc">Display video description snippet under metadata</span>
         </div>
         <label class="switch">
           <input type="checkbox" id="toggle-show-desc">
@@ -59,8 +59,8 @@
       <!-- Hide Shorts -->
       <div class="setting-item">
         <div class="label-info">
-          <span class="label-title">Shorts ausblenden</span>
-          <span class="label-desc">Entfernt Shorts-Regale aus der Abo-Box</span>
+          <span class="label-title">Hide Shorts</span>
+          <span class="label-desc">Remove Shorts shelves from subscription feed</span>
         </div>
         <label class="switch">
           <input type="checkbox" id="toggle-hide-shorts">
@@ -71,8 +71,8 @@
       <!-- On-Page Switcher -->
       <div class="setting-item">
         <div class="label-info">
-          <span class="label-title">Button auf YouTube</span>
-          <span class="label-desc">Umschalter direkt in YouTube anzeigen</span>
+          <span class="label-title">On-Page Toggle</span>
+          <span class="label-desc">Show toggle button next to 'Manage' on YouTube</span>
         </div>
         <label class="switch">
           <input type="checkbox" id="toggle-on-page-btn">
@@ -87,7 +87,7 @@
         <svg viewBox="0 0 24 24" class="link-icon">
           <path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
         </svg>
-        <span>Zur Abo-Box wechseln</span>
+        <span>Open Subscription Feed</span>
       </a>
     </footer>
   </div>

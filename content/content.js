@@ -453,10 +453,10 @@
     btn.className = 'yt-list-view-toggle-btn';
     btn.setAttribute('type', 'button');
 
-    const targetModeText = currentSettings.enabled ? 'Kacheln' : 'Liste';
+    const targetModeText = currentSettings.enabled ? 'Grid' : 'List';
     const targetModeTitle = currentSettings.enabled
-      ? 'Zur Kachelansicht wechseln'
-      : 'Zur Listenansicht wechseln';
+      ? 'Switch to grid view'
+      : 'Switch to list view';
     const targetModeIcon = currentSettings.enabled ? GRID_ICON_SVG : LIST_ICON_SVG;
 
     btn.setAttribute('title', targetModeTitle);
@@ -526,14 +526,14 @@
     const textSpan = btn.querySelector('.yt-list-view-toggle-text');
 
     if (currentSettings.enabled) {
-      // List is active -> Show action to switch to Kacheln
-      btn.setAttribute('title', 'Zur Kachelansicht wechseln');
-      if (textSpan) textSpan.textContent = 'Kacheln';
+      // List is active -> Show action to switch to Grid
+      btn.setAttribute('title', 'Switch to grid view');
+      if (textSpan) textSpan.textContent = 'Grid';
       if (iconSpan) iconSpan.innerHTML = GRID_ICON_SVG;
     } else {
-      // Kacheln are active -> Show action to switch to Liste
-      btn.setAttribute('title', 'Zur Listenansicht wechseln');
-      if (textSpan) textSpan.textContent = 'Liste';
+      // Grid is active -> Show action to switch to List
+      btn.setAttribute('title', 'Switch to list view');
+      if (textSpan) textSpan.textContent = 'List';
       if (iconSpan) iconSpan.innerHTML = LIST_ICON_SVG;
     }
   }
