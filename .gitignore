@@ -14,3 +14,4 @@ Icon
 # Extension build/archive artifacts (if any)
 *.zip
 *.crx
+dist/

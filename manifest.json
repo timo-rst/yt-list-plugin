@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Abo-Box Listenansicht",
-  "version": "1.0.2",
-  "description": "Stellt die klassische, übersichtliche Listenansicht für die YouTube Abo-Box wieder her.",
+  "name": "Abo-Box Listenansicht für YouTube™",
+  "version": "1.0.0",
+  "description": "Bringt die klassische, übersichtliche Listenansicht für deine YouTube™ Abo-Box zurück mit Infobox-Vorschau und Thumbnail-Skalierung.",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -21,7 +21,7 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     },
-    "default_title": "YouTube Abo-Box Listenansicht"
+    "default_title": "Abo-Box Listenansicht für YouTube™"
   },
   "content_scripts": [
     {
