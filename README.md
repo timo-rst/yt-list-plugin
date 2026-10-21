@@ -23,7 +23,6 @@ A lightweight and responsive Chromium browser extension (Manifest V3) for **Brav
 | ❌ Long titles are frequently truncated | ✅ Full video titles are always clearly visible |
 | ❌ No video descriptions in subscription feed | ✅ First lines of video description (infobox) shown under views |
 | ❌ Easy to miss videos while scanning down | ✅ Structured, linear view — impossible to overlook new uploads |
-| ℹ️ Shorts shelves shown as horizontal rows | ✅ Shorts work normally, with an added option to hide them completely |
 
 ---
 
@@ -33,9 +32,7 @@ A lightweight and responsive Chromium browser extension (Manifest V3) for **Brav
 - 📝 **Live Description Preview:** Automatically fetches and displays the first lines of the video description directly under the metadata.
 - 🎛️ **Seamless On-Page Toggle Button:** Placed right next to YouTube's **"Manage"** button in the subscription header (`[ ☷ Grid ]` when list view is active, or `[ ☰ List ]` when grid view is active) to switch views with a single click.
 - ⚡ **Automatic Description Toggling:** Switching to grid view automatically hides descriptions and cleanly restores YouTube's default 4-column layout without page reloads.
-- 📱 **Flexible Shorts Control:**
-  - YouTube Shorts shelves work normally as horizontal scrollable rows (`S S S S S`).
-  - You can optionally toggle **Hide Shorts** in settings to completely remove Shorts shelves from your subscription feed.
+- 📱 **Hide Shorts Option:** Completely hide YouTube Shorts shelves from your subscription feed with a single switch in settings.
 - 🎚️ **Live Thumbnail Sizing:** Adjust thumbnail width smoothly from **160px to 420px** with instant live preview in your active tab.
 - 🌓 **Native YouTube Theme Integration:** Seamlessly adapts to YouTube's dark and light mode color tokens.
 - 🛡️ **Lightweight & Privacy-First:**
