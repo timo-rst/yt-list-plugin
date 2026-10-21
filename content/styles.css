@@ -162,9 +162,9 @@ body[data-yt-list-view="true"] :is(.yt-lockup-metadata-view-model__title, .ytLoc
   -webkit-line-clamp: 2 !important;
   overflow: hidden !important;
   white-space: normal !important;
-  line-height: 1.4 !important;
-  font-weight: 500 !important;
-  font-size: 1.15rem !important;
+  line-height: 1.35 !important;
+  font-weight: 550 !important;
+  font-size: 1.32rem !important;
   color: var(--yt-spec-text-primary, #f1f1f1) !important;
   margin-bottom: 6px !important;
 }
@@ -182,9 +182,9 @@ body[data-yt-list-view="true"] :is(.yt-content-metadata-view-model__metadata-row
   display: flex !important;
   align-items: center !important;
   flex-wrap: wrap !important;
-  color: var(--yt-spec-text-secondary, #aaaaaa) !important;
-  font-size: 0.9rem !important;
-  line-height: 1.35 !important;
+  color: var(--yt-spec-text-secondary, #bbbbbb) !important;
+  font-size: 1.02rem !important;
+  line-height: 1.4 !important;
 }
 
 /* Menu Button (3 Dots) */
@@ -202,17 +202,17 @@ body[data-yt-list-view="true"] :is(.yt-lockup-metadata-view-model__menu-button, 
    3. Video Description / Infobox Snippet
    -------------------------------------------------------------------------- */
 .yt-list-view-desc {
-  margin-top: 8px !important;
-  font-size: 0.88rem !important;
-  line-height: 1.4 !important;
-  color: var(--yt-spec-text-secondary, #aaaaaa) !important;
+  margin-top: 10px !important;
+  font-size: 1.02rem !important;
+  line-height: 1.5 !important;
+  color: var(--yt-spec-text-secondary, #cccccc) !important;
   display: -webkit-box !important;
   -webkit-box-orient: vertical !important;
-  -webkit-line-clamp: 2 !important;
+  -webkit-line-clamp: 3 !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   word-break: break-word !important;
-  opacity: 0.9;
+  opacity: 0.95 !important;
   transition: opacity 0.2s ease;
 }
 
@@ -304,22 +304,22 @@ body[data-yt-list-view="true"] ytd-rich-grid-media #video-title {
   -webkit-box-orient: vertical !important;
   -webkit-line-clamp: 2 !important;
   overflow: hidden !important;
-  line-height: 1.4 !important;
-  font-weight: 500 !important;
-  font-size: 1.15rem !important;
+  line-height: 1.35 !important;
+  font-weight: 550 !important;
+  font-size: 1.32rem !important;
   margin-bottom: 6px !important;
 }
 
 html[data-yt-list-view="true"] ytd-rich-grid-media ytd-channel-name,
 body[data-yt-list-view="true"] ytd-rich-grid-media ytd-channel-name {
-  font-size: 0.92rem !important;
+  font-size: 1.02rem !important;
   margin-bottom: 3px !important;
 }
 
 html[data-yt-list-view="true"] ytd-rich-grid-media #metadata-line,
 body[data-yt-list-view="true"] ytd-rich-grid-media #metadata-line {
-  font-size: 0.88rem !important;
-  line-height: 1.35 !important;
+  font-size: 0.98rem !important;
+  line-height: 1.4 !important;
 }
 
 html[data-yt-list-view="true"] ytd-rich-grid-media #menu,
