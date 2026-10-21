@@ -228,8 +228,16 @@
 
     try {
       const res = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
-        credentials: 'same-origin'
+        credentials: 'same-origin',
+        signal: AbortSignal.timeout ? AbortSignal.timeout(5000) : undefined
       });
+
+      if (res.status === 429) {
+        // Rate limited: back off to protect YouTube session
+        await new Promise((r) => setTimeout(r, 8000));
+        return '';
+      }
+
       if (res.ok) {
         const html = await res.text();
         const m =
@@ -252,6 +260,10 @@
 
         const cleaned = cleanDescription(desc);
         if (cleaned) {
+          if (descCache.size > 500) {
+            const firstKey = descCache.keys().next().value;
+            if (firstKey) descCache.delete(firstKey);
+          }
           descCache.set(videoId, cleaned);
           try {
             sessionStorage.setItem(`yt_desc_${videoId}`, cleaned);
