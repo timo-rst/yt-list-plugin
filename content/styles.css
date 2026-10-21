@@ -254,14 +254,32 @@ body[data-yt-list-view="true"] :is(.yt-lockup-metadata-view-model__menu-button, 
 }
 
 /* --------------------------------------------------------------------------
-   3. Video Description / Infobox Snippet
+   3. Video Description / Infobox Snippet (Strictly list view only!)
    -------------------------------------------------------------------------- */
-.yt-list-view-desc {
+.yt-list-view-desc,
+html:not([data-yt-list-view="true"]) .yt-list-view-desc,
+body:not([data-yt-list-view="true"]) .yt-list-view-desc,
+html[data-yt-show-desc="false"] .yt-list-view-desc,
+body[data-yt-show-desc="false"] .yt-list-view-desc,
+.yt-list-view-desc:empty {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Display description ONLY when list view is active and show-desc is not false */
+html[data-yt-list-view="true"]:not([data-yt-show-desc="false"]) .yt-list-view-desc:not(:empty),
+body[data-yt-list-view="true"]:not([data-yt-show-desc="false"]) .yt-list-view-desc:not(:empty) {
+  display: -webkit-box !important;
+  visibility: visible !important;
+  height: auto !important;
   margin-top: 10px !important;
   font-size: 1.02rem !important;
   line-height: 1.5 !important;
   color: var(--yt-spec-text-secondary, #cccccc) !important;
-  display: -webkit-box !important;
   -webkit-box-orient: vertical !important;
   -webkit-line-clamp: 3 !important;
   overflow: hidden !important;
@@ -269,15 +287,6 @@ body[data-yt-list-view="true"] :is(.yt-lockup-metadata-view-model__menu-button, 
   word-break: break-word !important;
   opacity: 0.95 !important;
   transition: opacity 0.2s ease;
-}
-
-.yt-list-view-desc:empty {
-  display: none !important;
-}
-
-html[data-yt-show-desc="false"] .yt-list-view-desc,
-body[data-yt-show-desc="false"] .yt-list-view-desc {
-  display: none !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -400,47 +409,77 @@ body[data-yt-list-view="true"][data-yt-hide-shorts="true"] ytd-rich-item-rendere
 }
 
 /* --------------------------------------------------------------------------
-   6. On-Page Toggle Button
+   6. On-Page Toggle Button (placed next to 'Alle Abos' / 'Manage')
    -------------------------------------------------------------------------- */
 .yt-list-view-toggle-container {
-  display: inline-flex;
-  align-items: center;
-  margin: 6px 12px 6px 0;
-  vertical-align: middle;
+  display: inline-flex !important;
+  align-items: center !important;
+  margin-left: auto !important;
+  margin-right: 8px !important;
+  vertical-align: middle !important;
+  flex-shrink: 0 !important;
+  order: 998 !important;
 }
 
 .yt-list-view-toggle-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  height: 32px;
-  padding: 0 12px;
-  border-radius: 8px;
-  border: 1px solid var(--yt-spec-10-percent-layer, rgba(255, 255, 255, 0.15));
-  background-color: var(--yt-spec-badge-chip-background, rgba(255, 255, 255, 0.08));
-  color: var(--yt-spec-text-primary, #ffffff);
-  font-family: "Roboto", "Arial", sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  height: 36px !important;
+  padding: 0 14px !important;
+  border-radius: 18px !important;
+  border: 1px solid var(--yt-spec-10-percent-layer, rgba(255, 255, 255, 0.15)) !important;
+  background-color: var(--yt-spec-badge-chip-background, rgba(255, 255, 255, 0.1)) !important;
+  color: var(--yt-spec-text-primary, #ffffff) !important;
+  font-family: "Roboto", "YouTube Sans", "Arial", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
+  user-select: none !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  line-height: normal !important;
 }
 
 .yt-list-view-toggle-btn:hover {
-  background-color: var(--yt-spec-button-chip-background-hover, rgba(255, 255, 255, 0.18));
+  background-color: var(--yt-spec-button-chip-background-hover, rgba(255, 255, 255, 0.2)) !important;
+  border-color: var(--yt-spec-10-percent-layer, rgba(255, 255, 255, 0.3)) !important;
 }
 
 .yt-list-view-toggle-btn.active {
-  background-color: var(--yt-spec-text-primary, #ffffff);
-  color: var(--yt-spec-base-background, #0f0f0f);
-  border-color: transparent;
+  background-color: var(--yt-spec-text-primary, #ffffff) !important;
+  color: var(--yt-spec-base-background, #0f0f0f) !important;
+  border-color: transparent !important;
+  font-weight: 550 !important;
 }
 
-.yt-list-view-toggle-btn svg {
-  width: 16px;
-  height: 16px;
+.yt-list-view-toggle-btn.active:hover {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.yt-list-view-toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.yt-list-view-toggle-icon svg {
+  width: 18px;
+  height: 18px;
   fill: currentColor;
+  display: block;
+}
+
+.yt-list-view-toggle-text {
+  font-size: 14px;
+  font-weight: inherit;
+  color: inherit;
+  line-height: 1;
 }
 
 /* --------------------------------------------------------------------------

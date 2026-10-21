@@ -95,11 +95,39 @@
     `;
   }
 
+  function removeDynamicStyles() {
+    const styleEl = document.getElementById('yt-list-view-dynamic-styles');
+    if (styleEl) {
+      styleEl.remove();
+    }
+  }
+
   function applyState() {
     const onSubsPage = isSubscriptionsPage();
-    const shouldBeActive = onSubsPage && currentSettings.enabled;
 
-    if (shouldBeActive) {
+    if (!onSubsPage) {
+      document.documentElement.removeAttribute('data-yt-list-view');
+      document.documentElement.removeAttribute('data-yt-hide-shorts');
+      document.documentElement.removeAttribute('data-yt-show-desc');
+      if (document.body) {
+        document.body.removeAttribute('data-yt-list-view');
+        document.body.removeAttribute('data-yt-hide-shorts');
+        document.body.removeAttribute('data-yt-show-desc');
+      }
+      removeDynamicStyles();
+      removeToggleButton();
+      return;
+    }
+
+    // Always maintain toggle button on subscriptions page when setting is enabled
+    if (currentSettings.showOnPageToggle) {
+      injectToggleButton();
+      updateToggleButton();
+    } else {
+      removeToggleButton();
+    }
+
+    if (currentSettings.enabled) {
       document.documentElement.setAttribute('data-yt-list-view', 'true');
       if (document.body) {
         document.body.setAttribute('data-yt-list-view', 'true');
@@ -121,23 +149,35 @@
         if (document.body) document.body.removeAttribute('data-yt-hide-shorts');
       }
 
-      if (currentSettings.showOnPageToggle) {
-        injectToggleButton();
-      }
+      // Restore display on any existing descriptions
+      document.querySelectorAll('.yt-list-view-desc').forEach((el) => {
+        el.style.removeProperty('display');
+      });
 
       if (showDesc) {
         processVideoDescriptions();
       }
     } else {
+      // KACHELN (GRID) VIEW ACTIVE
       document.documentElement.removeAttribute('data-yt-list-view');
       document.documentElement.removeAttribute('data-yt-hide-shorts');
-      document.documentElement.removeAttribute('data-yt-show-desc');
+      document.documentElement.setAttribute('data-yt-show-desc', 'false');
       if (document.body) {
         document.body.removeAttribute('data-yt-list-view');
         document.body.removeAttribute('data-yt-hide-shorts');
-        document.body.removeAttribute('data-yt-show-desc');
+        document.body.setAttribute('data-yt-show-desc', 'false');
       }
-      removeToggleButton();
+
+      // Remove custom dynamic styles so native YouTube grid is restored
+      removeDynamicStyles();
+
+      // Clear pending queue so descriptions aren't loaded in grid view
+      descQueue.length = 0;
+
+      // Force-hide all existing descriptions
+      document.querySelectorAll('.yt-list-view-desc').forEach((el) => {
+        el.style.setProperty('display', 'none', 'important');
+      });
     }
   }
 
@@ -229,7 +269,7 @@
     isQueueRunning = true;
 
     while (descQueue.length > 0) {
-      if (!isSubscriptionsPage() || currentSettings.showDescription === false) {
+      if (!isSubscriptionsPage() || !currentSettings.enabled || currentSettings.showDescription === false) {
         break;
       }
 
@@ -242,7 +282,6 @@
         const text = descCache.get(vid);
         if (text && descEl.isConnected) {
           descEl.textContent = text;
-          descEl.style.display = '-webkit-box';
         }
         continue;
       }
@@ -250,7 +289,6 @@
       const text = await fetchVideoDescription(vid);
       if (text && descEl.isConnected) {
         descEl.textContent = text;
-        descEl.style.display = '-webkit-box';
       }
 
       await new Promise((r) => setTimeout(r, 60));
@@ -260,11 +298,12 @@
   }
 
   function enqueueVideo(vid, descEl) {
+    if (!currentSettings.enabled || currentSettings.showDescription === false) return;
+
     if (descCache.has(vid)) {
       const text = descCache.get(vid);
       if (text) {
         descEl.textContent = text;
-        descEl.style.display = '-webkit-box';
       }
       return;
     }
@@ -274,7 +313,6 @@
       if (cached) {
         descCache.set(vid, cached);
         descEl.textContent = cached;
-        descEl.style.display = '-webkit-box';
         return;
       }
     } catch (_) {}
@@ -295,7 +333,7 @@
   }
 
   function processVideoDescriptions() {
-    if (!isSubscriptionsPage() || currentSettings.showDescription === false) return;
+    if (!isSubscriptionsPage() || !currentSettings.enabled || currentSettings.showDescription === false) return;
 
     const cards = document.querySelectorAll(
       'ytd-rich-item-renderer :is(.yt-lockup-view-model, .ytLockupViewModelHost), ytd-rich-item-renderer ytd-rich-grid-media'
@@ -340,44 +378,78 @@
     });
   }
 
-  // Toggle button injection
-  function injectToggleButton() {
-    if (!isSubscriptionsPage() || !currentSettings.showOnPageToggle) {
-      removeToggleButton();
-      return;
+  // Toggle button injection next to 'Alle Abos'
+  const LIST_ICON_SVG = `
+    <svg viewBox="0 0 24 24">
+      <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+    </svg>
+  `;
+
+  const GRID_ICON_SVG = `
+    <svg viewBox="0 0 24 24">
+      <path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/>
+    </svg>
+  `;
+
+  function findAlleAbosElement() {
+    const link =
+      document.querySelector('ytd-browse[page-subtype="subscriptions"] a[href*="/feed/channels"]') ||
+      document.querySelector('a[href*="/feed/channels"]') ||
+      document.querySelector('ytd-browse[page-subtype="subscriptions"] a[href*="channels"]') ||
+      document.querySelector('a[href*="channels"]');
+
+    if (link) {
+      const outerButton =
+        link.closest('ytd-button-renderer') ||
+        link.closest('yt-button-view-model') ||
+        link.closest('ytd-menu-renderer') ||
+        link.closest('.yt-spec-button-shape-next') ||
+        link.closest('yt-button-shape') ||
+        link;
+      return outerButton;
     }
 
-    if (document.getElementById('yt-list-view-toggle')) {
-      updateToggleButton();
-      return;
+    // Fallback: search by text content
+    const candidates = document.querySelectorAll(
+      'ytd-browse[page-subtype="subscriptions"] #header a, ytd-browse[page-subtype="subscriptions"] #header button, ytd-feed-filter-chip-bar-renderer a, ytd-feed-filter-chip-bar-renderer button'
+    );
+    for (const el of candidates) {
+      const text = (el.textContent || '').trim().toLowerCase();
+      if (text === 'alle abos' || text === 'manage' || text === 'abos verwalten' || text === 'abos') {
+        const outerButton =
+          el.closest('ytd-button-renderer') ||
+          el.closest('yt-button-view-model') ||
+          el.closest('.yt-spec-button-shape-next') ||
+          el.closest('yt-button-shape') ||
+          el;
+        return outerButton;
+      }
     }
 
-    const targetParent =
-      document.querySelector('ytd-feed-filter-chip-bar-renderer #chips') ||
-      document.querySelector('iron-selector#chips') ||
-      document.querySelector('ytd-browse[page-subtype="subscriptions"] #header') ||
-      document.querySelector('ytd-rich-grid-renderer #header') ||
-      document.querySelector('ytd-two-column-browse-results-renderer #header');
+    return null;
+  }
 
-    if (!targetParent) {
-      setTimeout(injectToggleButton, 300);
-      return;
-    }
+  function createToggleButtonElement() {
+    let container = document.getElementById('yt-list-view-toggle');
+    if (container) return container;
 
-    const container = document.createElement('div');
+    container = document.createElement('div');
     container.id = 'yt-list-view-toggle';
     container.className = 'yt-list-view-toggle-container';
 
     const btn = document.createElement('button');
     btn.className = `yt-list-view-toggle-btn ${currentSettings.enabled ? 'active' : ''}`;
     btn.setAttribute('type', 'button');
-    btn.setAttribute('title', 'Zwischen Listenansicht und Kachelansicht wechseln');
+    btn.setAttribute(
+      'title',
+      currentSettings.enabled ? 'Zur Kachelansicht wechseln' : 'Zur Listenansicht wechseln'
+    );
 
     btn.innerHTML = `
-      <svg viewBox="0 0 24 24">
-        <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
-      </svg>
-      <span>${currentSettings.enabled ? 'Liste aktiv' : 'Kacheln'}</span>
+      <span class="yt-list-view-toggle-icon">
+        ${currentSettings.enabled ? LIST_ICON_SVG : GRID_ICON_SVG}
+      </span>
+      <span class="yt-list-view-toggle-text">${currentSettings.enabled ? 'Liste aktiv' : 'Kacheln'}</span>
     `;
 
     btn.addEventListener('click', (e) => {
@@ -395,11 +467,41 @@
     });
 
     container.appendChild(btn);
+    return container;
+  }
 
-    if (targetParent.firstChild) {
-      targetParent.insertBefore(container, targetParent.firstChild);
-    } else {
-      targetParent.appendChild(container);
+  let injectRetryTimer = null;
+
+  function injectToggleButton() {
+    if (!isSubscriptionsPage() || !currentSettings.showOnPageToggle) {
+      removeToggleButton();
+      return;
+    }
+
+    const alleAbosEl = findAlleAbosElement();
+    let container = document.getElementById('yt-list-view-toggle');
+
+    if (alleAbosEl && alleAbosEl.parentElement) {
+      if (!container || !container.isConnected) {
+        if (container) container.remove();
+        container = createToggleButtonElement();
+      }
+
+      if (container.nextSibling !== alleAbosEl) {
+        alleAbosEl.parentElement.insertBefore(container, alleAbosEl);
+      }
+      alleAbosEl.style.marginLeft = '0px';
+      updateToggleButton();
+      return;
+    }
+
+    // If Alle Abos not found yet, wait and retry
+    if (!container || !container.isConnected) {
+      if (injectRetryTimer) clearTimeout(injectRetryTimer);
+      injectRetryTimer = setTimeout(() => {
+        injectRetryTimer = null;
+        injectToggleButton();
+      }, 250);
     }
   }
 
@@ -407,18 +509,29 @@
     const btn = document.querySelector('#yt-list-view-toggle .yt-list-view-toggle-btn');
     if (!btn) return;
 
+    const iconSpan = btn.querySelector('.yt-list-view-toggle-icon');
+    const textSpan = btn.querySelector('.yt-list-view-toggle-text');
+
     if (currentSettings.enabled) {
       btn.classList.add('active');
-      btn.querySelector('span').textContent = 'Liste aktiv';
+      btn.setAttribute('title', 'Zur Kachelansicht wechseln');
+      if (textSpan) textSpan.textContent = 'Liste aktiv';
+      if (iconSpan) iconSpan.innerHTML = LIST_ICON_SVG;
     } else {
       btn.classList.remove('active');
-      btn.querySelector('span').textContent = 'Kacheln';
+      btn.setAttribute('title', 'Zur Listenansicht wechseln');
+      if (textSpan) textSpan.textContent = 'Kacheln';
+      if (iconSpan) iconSpan.innerHTML = GRID_ICON_SVG;
     }
   }
 
   function removeToggleButton() {
     const existing = document.getElementById('yt-list-view-toggle');
     if (existing) existing.remove();
+    const alleAbosEl = findAlleAbosElement();
+    if (alleAbosEl) {
+      alleAbosEl.style.marginLeft = '';
+    }
   }
 
   // Safe navigation listeners (NO monkey-patching of history, NO DOM mutation loops)
@@ -426,20 +539,39 @@
     window.addEventListener('yt-navigate-finish', () => {
       applyState();
       setTimeout(applyState, 150);
-      setTimeout(processVideoDescriptions, 400);
+      setTimeout(() => {
+        if (currentSettings.enabled && currentSettings.showDescription) {
+          processVideoDescriptions();
+        }
+      }, 400);
     });
 
     window.addEventListener('yt-page-data-updated', () => {
       applyState();
-      setTimeout(processVideoDescriptions, 300);
+      setTimeout(() => {
+        if (currentSettings.enabled && currentSettings.showDescription) {
+          processVideoDescriptions();
+        }
+      }, 300);
     });
 
     window.addEventListener('popstate', () => {
       applyState();
-      setTimeout(processVideoDescriptions, 300);
+      setTimeout(() => {
+        if (currentSettings.enabled && currentSettings.showDescription) {
+          processVideoDescriptions();
+        }
+      }, 300);
     });
 
-    // Throttled scroll listener for infinite scrolling (completely safe against mutation loops)
+    // Listen for clicks on chip filters (e.g., Today, Unwatched) to keep toggle button in place
+    document.addEventListener('click', (e) => {
+      if (e.target && e.target.closest('ytd-feed-filter-chip-bar-renderer, yt-chip-cloud-chip-renderer')) {
+        setTimeout(injectToggleButton, 150);
+      }
+    });
+
+    // Throttled scroll listener for infinite scrolling
     window.addEventListener(
       'scroll',
       () => {
@@ -454,6 +586,16 @@
       },
       { passive: true }
     );
+
+    // Keep-alive check to guarantee button stays next to "Alle Abos" across dynamic page rewrites
+    setInterval(() => {
+      if (!isSubscriptionsPage() || !currentSettings.showOnPageToggle) return;
+      const btn = document.getElementById('yt-list-view-toggle');
+      const alleAbosEl = findAlleAbosElement();
+      if (!btn || !btn.isConnected || (alleAbosEl && btn.nextSibling !== alleAbosEl)) {
+        injectToggleButton();
+      }
+    }, 1200);
   }
 
   loadSettings(() => {
@@ -461,11 +603,20 @@
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
         applyState();
-        setTimeout(processVideoDescriptions, 500);
+        setTimeout(() => {
+          if (currentSettings.enabled && currentSettings.showDescription) {
+            processVideoDescriptions();
+          }
+        }, 500);
       });
     } else {
-      setTimeout(processVideoDescriptions, 500);
+      setTimeout(() => {
+        if (currentSettings.enabled && currentSettings.showDescription) {
+          processVideoDescriptions();
+        }
+      }, 500);
     }
     initNavigationListeners();
   });
 })();
+
