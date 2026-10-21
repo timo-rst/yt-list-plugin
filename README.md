@@ -31,7 +31,7 @@ Eine schlanke, performante Browser-Erweiterung für den **Brave Browser**, **Goo
 
 - 📜 **Klassische Listenansicht:** Videos werden sauber untereinander mit flexibler Thumbnail-Größe links und vollständigen Metadaten rechts dargestellt.
 - 📝 **Videobeschreibungs-Vorschau:** Zeigt automatisch die ersten Zeilen der Videobeschreibung (Infobox) direkt in der Abo-Box unter dem Kanalnamen und den Aufrufen an.
-- 🎛️ **Nahtloser Umschalt-Button:** Direkt neben dem YouTube-Button **„Alle Abos“** befindet sich ein dezenter Umschalter (`[ ☰ Liste aktiv ]` / `[ ☷ Kacheln ]`), mit dem sich jederzeit zwischen Kachel- und Listenansicht wechseln lässt.
+- 🎛️ **Nahtloser Umschalt-Button:** Direkt neben dem YouTube-Button **„Alle Abos“** befindet sich ein dezenter Umschalter (`[ ☷ Kacheln ]` wenn Liste aktiv ist, bzw. `[ ☰ Liste ]` wenn Kacheln aktiv sind), mit dem sich jederzeit zwischen Kachel- und Listenansicht wechseln lässt.
 - ⚡ **Automatische Beschreibungsabschaltung:** Sobald auf Kacheln umgeschaltet wird, werden die Beschreibungen automatisch ausgeblendet und das native YouTube-Grid 1:1 wiederhergestellt.
 - 📱 **Intelligentes Shorts-Handling:** 
   - YouTube Shorts-Regale bleiben als kompakte horizontale Reihe (`S S S S S`) erhalten und scrollen seitlich – kein vertikaler Riesenblock.

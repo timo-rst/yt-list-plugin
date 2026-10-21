@@ -438,18 +438,19 @@
     container.className = 'yt-list-view-toggle-container';
 
     const btn = document.createElement('button');
-    btn.className = `yt-list-view-toggle-btn ${currentSettings.enabled ? 'active' : ''}`;
+    btn.className = 'yt-list-view-toggle-btn';
     btn.setAttribute('type', 'button');
-    btn.setAttribute(
-      'title',
-      currentSettings.enabled ? 'Zur Kachelansicht wechseln' : 'Zur Listenansicht wechseln'
-    );
 
+    const targetModeText = currentSettings.enabled ? 'Kacheln' : 'Liste';
+    const targetModeTitle = currentSettings.enabled
+      ? 'Zur Kachelansicht wechseln'
+      : 'Zur Listenansicht wechseln';
+    const targetModeIcon = currentSettings.enabled ? GRID_ICON_SVG : LIST_ICON_SVG;
+
+    btn.setAttribute('title', targetModeTitle);
     btn.innerHTML = `
-      <span class="yt-list-view-toggle-icon">
-        ${currentSettings.enabled ? LIST_ICON_SVG : GRID_ICON_SVG}
-      </span>
-      <span class="yt-list-view-toggle-text">${currentSettings.enabled ? 'Liste aktiv' : 'Kacheln'}</span>
+      <span class="yt-list-view-toggle-icon">${targetModeIcon}</span>
+      <span class="yt-list-view-toggle-text">${targetModeText}</span>
     `;
 
     btn.addEventListener('click', (e) => {
@@ -513,15 +514,15 @@
     const textSpan = btn.querySelector('.yt-list-view-toggle-text');
 
     if (currentSettings.enabled) {
-      btn.classList.add('active');
+      // List is active -> Show action to switch to Kacheln
       btn.setAttribute('title', 'Zur Kachelansicht wechseln');
-      if (textSpan) textSpan.textContent = 'Liste aktiv';
-      if (iconSpan) iconSpan.innerHTML = LIST_ICON_SVG;
-    } else {
-      btn.classList.remove('active');
-      btn.setAttribute('title', 'Zur Listenansicht wechseln');
       if (textSpan) textSpan.textContent = 'Kacheln';
       if (iconSpan) iconSpan.innerHTML = GRID_ICON_SVG;
+    } else {
+      // Kacheln are active -> Show action to switch to Liste
+      btn.setAttribute('title', 'Zur Listenansicht wechseln');
+      if (textSpan) textSpan.textContent = 'Liste';
+      if (iconSpan) iconSpan.innerHTML = LIST_ICON_SVG;
     }
   }
 
